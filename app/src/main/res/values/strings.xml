@@ -7,15 +7,11 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_address_fragment">Hello ADDRESS fragment kdlsjgdjg löjgdflkjg ödfjgödlkfjgölksjgfkdlöjglkdfjglködgjlködfgjklödfjglködfsjglöksgjkölsdjgkldsfjg dälöfgj löksd jgöldfshg lsdfhg ldflhgöldshglödfhgöldfhgölsdhgölsdfhg dlkhg dlöshgölsdhg lödsfhgöldsfhg sdlfghlsödghlösdf ldsg ldsöfhg ölsdhgö ldfghd Hello ADDRESS</string>
-    <string name="hello_rating_fragment">Hello RATING salgj öslgh dsölgh öldshgdflöghdfsögh lödfsh ödfsghöldsfhgöls hsödlhg ldsfhg lsdfhg lsdhdflkhglösdfhgöldsfhglösdfghlödsfhglödshglödfshgölfdhgölsdghödsfhgökldfshgölsdhglöksdhgödlfsghölfghöskldghökldsfh sldkgh öldsfh fragment lögj egtelögdsflögh öldfgöldfghdfölghlösdghlsödh ösdg ölsdhg dslh öghdsfölh lh ölh öl löhlö löh öh Hello RATING</string>
     <string name="edtName_hint">Name der Kantine</string>
     <string name="edtDummy_hint">dummy to test1</string>
     <string name="edtDummy_hint1">dummy1</string>
     <string name="edtDummy_hint2">dummy2</string>
-    <string name="mniSaveChanges">Save</string>
+    <string name="mniSaveChanges">Sichern</string>
     <string name="edtMenuName_hint">Tagesmenü</string>
     <string name="edtMenuPrice_hint">Menüpreis</string>
     <string name="txvWaitingTime">Durchschnittliche Wartezeit (min)</string>

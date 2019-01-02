@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.replace_fragments, fragment);
                 ft.commit();
-                
+
                 break;
 
             default:
