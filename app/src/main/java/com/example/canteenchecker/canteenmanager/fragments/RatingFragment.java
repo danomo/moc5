@@ -3,11 +3,14 @@ package com.example.canteenchecker.canteenmanager.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +28,7 @@ import com.example.canteenchecker.canteenmanager.R;
 import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.domainobjects.CanteenRating;
 import com.example.canteenchecker.canteenmanager.proxy.ServiceProxyManager;
+import com.example.canteenchecker.canteenmanager.service.MyFirebaseMessagingService;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
 
 import java.io.IOException;
@@ -39,13 +43,21 @@ public class RatingFragment extends FragmentChanges {
     private static final int LOGIN_FOR_RATING_FRAGMENT = 126;
 
     private final CanteenRatingAdapter ratingAdapter = new CanteenRatingAdapter();
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "Firebase  broadcastReceiver  new Message received.");
+            //  Toast.makeText(getApplication(), "neues Rating!", Toast.LENGTH_SHORT);
 
+            updateRatings();
+        }
+    };
     private CanteenManagerViewModel model;
-
     private TextView txtCountRatings;
     private TextView txtAvgRating;
     //  private SwipeRefreshLayout srlRatings;
     private RecyclerView rcvRatings;
+
 
     public RatingFragment() {
         // Required empty public constructor
@@ -99,7 +111,14 @@ public class RatingFragment extends FragmentChanges {
             updateRatings();
         }
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastReceiver, MyFirebaseMessagingService.updatedRatingsMessage());
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastReceiver);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

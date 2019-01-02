@@ -2,6 +2,9 @@ package com.example.canteenchecker.canteenmanager;
 
 import android.app.Application;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 public class CanteenManagerApplication1 extends Application {
 
     private static final String FIREBASE_MESSAGING_TOPIC = "canteens";
@@ -18,8 +21,8 @@ public class CanteenManagerApplication1 extends Application {
         super.onCreate();
         instance = this;
 
-        //  FirebaseApp.initializeApp(this);
-        // FirebaseMessaging.getInstance().subscribeToTopic(FIREBASE_MESSAGING_TOPIC);
+        FirebaseApp.initializeApp(this);
+        FirebaseMessaging.getInstance().subscribeToTopic(FIREBASE_MESSAGING_TOPIC);
     }
 
     public synchronized String getAuthenticationToken() {
