@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.AddressFragment"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/mpfMap"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/canteen_details_map_height"
+        android:layout_marginTop="@dimen/distance_small" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnTakeFromMap"
+        android:text="@string/btnTakeFromMap_hint"    />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtAddress"
+        android:hint="@string/edtAddress_hint"
+        android:inputType="text" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnShowInMap"
+        android:text="@string/btnShowInMap_hint"    />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edtName"
+        android:hint="@string/edtName_hint"
+        android:inputType="text" />
+
+</LinearLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_menu"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Tagesmenü" />
+        <item
+            android:id="@+id/nav_ratings"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Bewertungen" />
+        <item
+            android:id="@+id/nav_waitingperiod"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Wartezeit" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Kontakt" />
+        <item
+            android:id="@+id/nav_address"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Adresse/Name" />
+    </group>
+
+    <item android:title="Admin">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_menu_share"
+                android:title="logout" />
+        </menu>
+    </item>
+
+</menu>
