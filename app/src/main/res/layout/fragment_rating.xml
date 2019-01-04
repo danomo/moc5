@@ -3,37 +3,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.RatingFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".fragments.RatingFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/txtRating"
+            android:textSize="@dimen/txtRatings" />
+
+        <TextView
+            android:id="@+id/txtCountRatings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/distance_small"
             android:textSize="@dimen/txtRatings"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtCountRatings"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/paddingBig"
             android:text="@string/txtAvgRating"
-            android:paddingLeft="@dimen/paddingBig"/>
+            android:textSize="@dimen/txtRatings"/>
+
         <TextView
+            android:id="@+id/txtAvgRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtAvgRating"/>
+            android:layout_marginLeft="@dimen/distance_small"
+            android:textSize="@dimen/txtRatings"/>
+
     </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcvRatings"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="@dimen/distance_extra_small" />
+    <View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_thickness"
+        android:layout_marginTop="@dimen/distance_small"
+        android:layout_marginBottom="@dimen/distance_small"
+        android:background="?android:attr/dividerVertical" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvRatings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="@dimen/distance_extra_small" />
 
 </LinearLayout>

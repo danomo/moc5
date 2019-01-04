@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
 import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
+import com.example.canteenchecker.canteenmanager.domainobjects.Canteen;
 import com.example.canteenchecker.canteenmanager.domainobjects.CanteenRating;
 import com.example.canteenchecker.canteenmanager.proxy.ServiceProxyManager;
 import com.example.canteenchecker.canteenmanager.service.MyFirebaseMessagingService;
@@ -43,6 +44,9 @@ public class RatingFragment extends FragmentChanges {
     private static final int LOGIN_FOR_RATING_FRAGMENT = 126;
 
     private final CanteenRatingAdapter ratingAdapter = new CanteenRatingAdapter();
+    private CanteenManagerViewModel model;
+    private TextView txtCountRatings;
+    private TextView txtAvgRating;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -52,9 +56,6 @@ public class RatingFragment extends FragmentChanges {
             updateRatings();
         }
     };
-    private CanteenManagerViewModel model;
-    private TextView txtCountRatings;
-    private TextView txtAvgRating;
     //  private SwipeRefreshLayout srlRatings;
     private RecyclerView rcvRatings;
 
@@ -171,11 +172,11 @@ public class RatingFragment extends FragmentChanges {
     private void updateRatings() {
         // srlRatings.setRefreshing(true);
 
-        new AsyncTask<Void, Void, Collection<CanteenRating>>() {
+        new AsyncTask<Void, Void, Canteen>() {
             @Override
-            protected Collection<CanteenRating> doInBackground(Void... voids) {
+            protected Canteen doInBackground(Void... voids) {
                 try {
-                    return new ServiceProxyManager().getCanteen().getRatings();
+                    return new ServiceProxyManager().getCanteen();
                 } catch (IOException e) {
                     return null;
                 }
@@ -183,17 +184,21 @@ public class RatingFragment extends FragmentChanges {
 
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            protected void onPostExecute(Collection<CanteenRating> ratings) {
-                if (ratings == null) {
-                    Log.e(TAG, "got NO ratings   ");
+            protected void onPostExecute(Canteen c) {
+                if (c == null) {
+                    Log.e(TAG, "got NO canteen   ");
                     return;
                 }
-                Log.e(TAG, "ratings   size " + ratings.size());
-                ratings.stream().forEach(r -> {
+                Log.e(TAG, "ratings   size " + c.getRatings().size());
+                c.getRatings().stream().forEach(r -> {
                     Log.e(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
                 });
+
+                c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? -1 : 1));
                 // srlRatings.setRefreshing(false);
-                ratingAdapter.displayRatings(ratings);
+                ratingAdapter.displayRatings(c.getRatings());
+                txtCountRatings.setText(String.valueOf(c.getRatings().size()));
+                txtAvgRating.setText(String.format("'%8.1f'", c.getAverageRating()));
             }
         }.execute();
     }
@@ -213,7 +218,7 @@ public class RatingFragment extends FragmentChanges {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             final CanteenRating c = canteenList.get(position);
-            holder.txvUsername.setText(c.getUsername());
+            holder.txvUsername.setText(c.getUsername() + " | ");
             holder.txvRemark.setText(c.getRemark());
             holder.rtbRating.setRating(c.getRatingPoints());
 

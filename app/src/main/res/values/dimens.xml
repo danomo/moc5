@@ -13,4 +13,5 @@
     <dimen name="distance_extra_small">4dp</dimen>
     <dimen name="canteen_details_map_height">240dp</dimen>
     <dimen name="distance_big">24dp</dimen>
+    <dimen name="divider_thickness">2dp</dimen>
 </resources>

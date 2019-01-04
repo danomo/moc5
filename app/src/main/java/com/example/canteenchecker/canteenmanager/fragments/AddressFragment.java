@@ -122,11 +122,6 @@ public class AddressFragment extends FragmentChanges {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
     public void saveChanges() {
         model.getCanteen().getValue().setAddress(edtAddress.getText().toString());
         model.getCanteen().getValue().setName(edtName.getText().toString());

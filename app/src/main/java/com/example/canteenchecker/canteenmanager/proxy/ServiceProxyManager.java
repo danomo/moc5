@@ -1,11 +1,12 @@
 package com.example.canteenchecker.canteenmanager.proxy;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.domainobjects.Canteen;
 import com.example.canteenchecker.canteenmanager.domainobjects.CanteenRating;
+
+import java.io.IOException;
+import java.util.Collection;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -35,19 +36,6 @@ public class ServiceProxyManager {
             return null;
         }
         String token = "Bearer " + CanteenManagerApplication1.getInstance().getAuthenticationToken();
-
-        // Request req = proxy.getCanteen(token).request();
-        //Log.i(TAG, "proxy request  " + req.toString());
-        //Headers h = proxy.getCanteen(token).request().headers();
-
-        ///h.toMultimap().forEach((k, v) -> {
-        //   Log.i(TAG, String.format("header '%s'   value: '%s'", k, v));
-        //});
-
-        //Log.i(TAG, "proxy request  " + req.toString());
-
-        //String res = proxy.getCanteen(token).execute().raw().toString();
-        //Log.i(TAG, "proxy response  " + res);
 
         ProxyCanteen canteen = proxy.getCanteen(token).execute().body();
         if (canteen == null) {

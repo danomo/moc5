@@ -44,7 +44,14 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getName();
     private static final int LOGIN_FOR_CANTEEN_MANAGER = 123;
-    FragmentChanges fragment = null;
+    final FragmentChanges fragmentAddress = new AddressFragment();
+    final FragmentChanges fragmentContact = new ContactFragment();
+    final FragmentChanges fragmentHome = new HomeFragment();
+    final FragmentChanges fragmentMenu = new MenuFragment();
+    final FragmentChanges fragmentRating = new RatingFragment();
+    final FragmentChanges fragmentWaiting = new WaitingFragment();
+    FragmentChanges currentFragment;
+
     private CanteenManagerViewModel canteenModel;
 
     private TextView txvNavSubTitle;
@@ -64,16 +71,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         View hView = navigationView.getHeaderView(0);
@@ -103,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -116,23 +123,21 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Bundle bundle = new Bundle();
-
         switch (id) {
             case R.id.nav_address:
-                fragment = new AddressFragment();
+                loadFragment(fragmentAddress);
                 break;
             case R.id.nav_contact:
-                fragment = new ContactFragment();
+                loadFragment(fragmentContact);
                 break;
             case R.id.nav_menu:
-                fragment = new MenuFragment();
+                loadFragment(fragmentMenu);
                 break;
             case R.id.nav_ratings:
-                fragment = new RatingFragment();
+                loadFragment(fragmentRating);
                 break;
             case R.id.nav_waitingperiod:
-                fragment = new WaitingFragment();
+                loadFragment(fragmentWaiting);
                 break;
 
             //TODO: remove?
@@ -141,25 +146,12 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "logout success", Toast.LENGTH_SHORT).show();
                 CanteenManagerApplication1.getInstance().setAuthenticationToken(null);
                 txvNavSubTitle.setText(null);
-                txvNavTitle.setText("kein user angemeldet");
-                fragment = new HomeFragment();
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.replace_fragments, fragment);
-                ft.commit();
-
+                txvNavTitle.setText("Kein Benutzer angemeldet");
+                loadFragment(fragmentHome);
                 break;
-
             default:
                 Log.e(TAG, "switch ended in default - should not happen!");
         }
-
-        if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.replace_fragments, fragment);
-            ft.commit();
-        }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -174,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        fragment.saveChanges();
+        currentFragment.saveChanges();
         updateCanteen();
 
         return super.onOptionsItemSelected(item);
@@ -253,5 +245,13 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
+
+    private void loadFragment(FragmentChanges fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.replace_fragments, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+        currentFragment = fragment;
     }
 }

@@ -4,18 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.WaitingFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txvWaitingTimeIgnore"
+        android:text="@string/txvWaitingTime"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txvWaitingTime"
-        android:text="@string/txvWaitingTime"/>
+        android:paddingTop="@dimen/paddingSmall"
+        android:layout_marginTop="@dimen/distance_big"
+        android:text="23"
+        android:textAlignment="center"/>
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sbrWaitingTime"
+        android:layout_marginTop="@dimen/distance_small"
         android:min="1"
         android:max="60"
         android:progress="1"

@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.AddressFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
 
     <fragment
         android:id="@+id/mpfMap"
@@ -19,12 +23,19 @@
         android:id="@+id/btnTakeFromMap"
         android:text="@string/btnTakeFromMap_hint"    />
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edtAddress"
-        android:hint="@string/edtAddress_hint"
-        android:inputType="text" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtAddress"
+            android:hint="@string/edtAddress_hint"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:layout_width="match_parent"
@@ -32,11 +43,19 @@
         android:id="@+id/btnShowInMap"
         android:text="@string/btnShowInMap_hint"    />
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edtName"
-        android:hint="@string/edtName_hint"
-        android:inputType="text" />
+        android:layout_marginTop="@dimen/distance_big">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtName"
+            android:hint="@string/edtName_hint"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

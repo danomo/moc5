@@ -20,7 +20,7 @@
     <string name="edtPhone_hint">Telefon</string>
     <string name="txtRating">Bewertungen</string>
     <string name="txtAvgRating">Durchschnitt:</string>
-    <string name="btnShowInMap_hint">Zeige auf Karte</string>
+    <string name="btnShowInMap_hint">Zeige Adresse auf Karte</string>
     <string name="btnTakeFromMap_hint">Adresse aus Karte übernehmen</string>
     <string name="title_activity_login">Anmelden</string>
     <!-- Strings related to login -->
@@ -35,7 +35,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="edtUserName_hint">Username</string>
+    <string name="edtUserName_hint">Benutzername</string>
     <string name="edtPassword_hint">Passwort</string>
     <string name="btnLogin_text">Login</string>
     <string name="msg_LoginNotSuccessful">Login nicht erfolgreich</string>
