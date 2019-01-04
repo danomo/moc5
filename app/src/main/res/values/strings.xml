@@ -43,4 +43,9 @@
     <string name="btnHomeLogin_hint">Anmelden</string>
     <string name="edtHomeTxt">Sie sind nicht angemeldet.</string>
     <string name="NoUserLoggedIn">Kein Benutzer angemeldet</string>
+    <string name="confirmDelete">Löschen bestätigen</string>
+    <string name="deleteRating">Bewertung löschen</string>
+    <string name="txvDeleteRating">SInd sie sicher, dass Sie die Bewertung löschen wollen - wegen dem SM Shitstorm und so ...</string>
+    <string name="noRatingsFound">keine Bewertungen vorhanden</string>
+    <string name="edtHomeLoggedIn">SIe sind angemeldet</string>
 </resources>

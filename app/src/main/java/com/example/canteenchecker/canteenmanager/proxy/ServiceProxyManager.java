@@ -1,6 +1,6 @@
 package com.example.canteenchecker.canteenmanager.proxy;
 
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
+import com.example.canteenchecker.canteenmanager.CanteenManagerApplication;
 import com.example.canteenchecker.canteenmanager.domainobjects.Canteen;
 import com.example.canteenchecker.canteenmanager.domainobjects.CanteenRating;
 
@@ -32,10 +32,10 @@ public class ServiceProxyManager {
             .create(Proxy.class);
 
     public Canteen getCanteen() throws IOException {
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (!CanteenManagerApplication.getInstance().isAuthenticated()) {
             return null;
         }
-        String token = "Bearer " + CanteenManagerApplication1.getInstance().getAuthenticationToken();
+        String token = "Bearer " + CanteenManagerApplication.getInstance().getAuthenticationToken();
 
         ProxyCanteen canteen = proxy.getCanteen(token).execute().body();
         if (canteen == null) {
@@ -45,20 +45,20 @@ public class ServiceProxyManager {
     }
 
     public boolean updateCanteen(Canteen c) throws IOException {
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (!CanteenManagerApplication.getInstance().isAuthenticated()) {
             return false;
         }
-        String token = "Bearer " + CanteenManagerApplication1.getInstance().getAuthenticationToken();
+        String token = "Bearer " + CanteenManagerApplication.getInstance().getAuthenticationToken();
 
         ProxyCanteenNoRatings cnr = new ProxyCanteenNoRatings(c);
         return proxy.updateCanteen(token, cnr).execute().isSuccessful();
     }
 
     public boolean deleteRating(int ratingId) throws IOException {
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (!CanteenManagerApplication.getInstance().isAuthenticated()) {
             return false;
         }
-        String token = "Bearer " + CanteenManagerApplication1.getInstance().getAuthenticationToken();
+        String token = "Bearer " + CanteenManagerApplication.getInstance().getAuthenticationToken();
         return proxy.deleteRating(token, ratingId).execute().isSuccessful();
     }
 

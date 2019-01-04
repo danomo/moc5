@@ -5,14 +5,14 @@ import android.app.Application;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-public class CanteenManagerApplication1 extends Application {
+public class CanteenManagerApplication extends Application {
 
     private static final String FIREBASE_MESSAGING_TOPIC = "canteens";
-    private static CanteenManagerApplication1 instance;
+    private static CanteenManagerApplication instance;
 
     private String authenticationToken;
 
-    public static CanteenManagerApplication1 getInstance() {
+    public static CanteenManagerApplication getInstance() {
         return instance;
     }
 

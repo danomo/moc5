@@ -25,33 +25,6 @@ public class MenuFragment extends FragmentChanges {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MenuFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MenuFragment newInstance(String param1, String param2) {
-        MenuFragment fragment = new MenuFragment();
-
-        // TODO: save data to bundle ...
-        // Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //fragment.setArguments(args);´
-        Log.i(TAG, "MenuFragment newInstance");
-
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i(TAG, "MenuFragment onCreate");
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,6 +52,8 @@ public class MenuFragment extends FragmentChanges {
     @Override
     public void saveChanges() {
         model.getCanteen().getValue().setMeal(edtMenuName.getText().toString());
-        model.getCanteen().getValue().setMealPrice(Float.parseFloat(edtMenuPrice.getText().toString()));
+        String s = edtMenuPrice.getText().toString();
+        s = s.replace(",", ".");
+        model.getCanteen().getValue().setMealPrice(Float.parseFloat(s));
     }
 }

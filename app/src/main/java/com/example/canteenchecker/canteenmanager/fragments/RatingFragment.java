@@ -1,9 +1,11 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,8 +47,6 @@ public class RatingFragment extends FragmentChanges {
 
     private TextView txtCountRatings;
     private TextView txtAvgRating;
-    private RecyclerView rcvRatings;
-
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -55,27 +55,10 @@ public class RatingFragment extends FragmentChanges {
             displayCanteenData();
         }
     };
+    private RecyclerView rcvRatings;
 
     public RatingFragment() {
         // Required empty public constructor
-    }
-
-    public static RatingFragment newInstance(String param1, String param2) {
-        RatingFragment fragment = new RatingFragment();
-        Bundle args = new Bundle();
-
-        // TODO add data to bundle
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // TODO restore data from bundle
-            // mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -151,15 +134,20 @@ public class RatingFragment extends FragmentChanges {
                     Log.e(TAG, "got NO canteen   ");
                     return;
                 }
-                Log.i(TAG, "ratings   size " + c.getRatings().size());
-                c.getRatings().stream().forEach(r -> {
-                    Log.i(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
-                });
+                if (c.getRatings() != null) {
+                    Log.i(TAG, "ratings   size " + c.getRatings().size());
+                    c.getRatings().stream().forEach(r -> {
+                        Log.i(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
+                    });
 
-                Collection<CanteenRating> ratings = c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? 1 : -1)).collect(Collectors.toList());
-                ratingAdapter.displayRatings(ratings);
-                txtCountRatings.setText(String.valueOf(c.getRatings().size()));
-                txtAvgRating.setText(String.format("%4.1f", c.getAverageRating()));
+                    Collection<CanteenRating> ratings = c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? 1 : -1)).collect(Collectors.toList());
+                    ratingAdapter.displayRatings(ratings);
+                    txtCountRatings.setText(String.valueOf(c.getRatings().size()));
+                    txtAvgRating.setText(String.format("%4.1f", c.getAverageRating()));
+                } else {
+                    txtCountRatings.setText(getString(R.string.noRatingsFound));
+                    txtAvgRating.setText(null);
+                }
             }
         }.execute();
     }
@@ -191,30 +179,43 @@ public class RatingFragment extends FragmentChanges {
             holder.btnDelete.setOnClickListener(v -> {
                         Log.i(TAG, "button delete clicked deleting ratingId " + c.getRatingId() + " was successful   ");
 
-                        new AsyncTask<Integer, Void, Boolean>() {
-                            @Override
-                            protected Boolean doInBackground(Integer... integers) {
-                                try {
-                                    return new ServiceProxyManager().deleteRating(c.getRatingId());
-                                } catch (IOException e) {
-                                    return null;
-                                }
-                            }
+                        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_delete_rating, null);
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle(getString(R.string.confirmDelete))
+                                .setView(view)
+                                .setPositiveButton(getString(R.string.deleteRating), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
 
-                            @RequiresApi(api = Build.VERSION_CODES.N)
-                            @Override
-                            protected void onPostExecute(Boolean res) {
-                                if (res) {
-                                    canteenList.removeIf(r -> r.getRatingId() == c.getRatingId());
-                                    notifyDataSetChanged();
-                                    Toast.makeText(getActivity(), "Bewertung wurde gelöscht (Id: " + c.getRatingId() + ")", Toast.LENGTH_SHORT).show();
-                                    Log.i(TAG, "deleting ratingId " + c.getRatingId() + " was successful   ");
-                                } else {
-                                    Toast.makeText(getActivity(), "FEHLER: Bewertung konnte nicht gelöscht  werden.(Id: " + c.getRatingId() + ")", Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "deleting ratingId " + c.getRatingId() + " was NOT successful   ");
-                                }
-                            }
-                        }.execute();
+                                        new AsyncTask<Integer, Void, Boolean>() {
+                                            @Override
+                                            protected Boolean doInBackground(Integer... integers) {
+                                                try {
+                                                    return new ServiceProxyManager().deleteRating(c.getRatingId());
+                                                } catch (IOException e) {
+                                                    return null;
+                                                }
+                                            }
+
+                                            @RequiresApi(api = Build.VERSION_CODES.N)
+                                            @Override
+                                            protected void onPostExecute(Boolean res) {
+                                                if (res) {
+                                                    canteenList.removeIf(r -> r.getRatingId() == c.getRatingId());
+                                                    notifyDataSetChanged();
+                                                    Toast.makeText(getActivity(), "Bewertung wurde gelöscht (Id: " + c.getRatingId() + ")", Toast.LENGTH_SHORT).show();
+                                                    Log.i(TAG, "deleting ratingId " + c.getRatingId() + " was successful   ");
+                                                } else {
+                                                    Toast.makeText(getActivity(), "FEHLER: Bewertung konnte nicht gelöscht  werden.(Id: " + c.getRatingId() + ")", Toast.LENGTH_SHORT).show();
+                                                    Log.e(TAG, "deleting ratingId " + c.getRatingId() + " was NOT successful   ");
+                                                }
+                                            }
+                                        }.execute();
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
             );
         }

@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
 
         canteenModel = ViewModelProviders.of(this).get(CanteenManagerViewModel.class);
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (!CanteenManagerApplication.getInstance().isAuthenticated()) {
             Log.i(TAG, "not logged in -> log in ");
             startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
         } else {
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_logout:
                 Toast.makeText(this, "logout success", Toast.LENGTH_SHORT).show();
-                CanteenManagerApplication1.getInstance().setAuthenticationToken(null);
+                CanteenManagerApplication.getInstance().setAuthenticationToken(null);
                 txvNavSubTitle.setText(null);
                 txvNavTitle.setText(getString(R.string.NoUserLoggedIn));
                 loadFragment(fragmentHome, false);
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem((R.id.mniSaveChanges)).setVisible(
-                CanteenManagerApplication1.getInstance().isAuthenticated() &&
+                CanteenManagerApplication.getInstance().isAuthenticated() &&
                         ((currentFragment != fragmentRating) || (currentFragment != fragmentHome)));
 
         return super.onPrepareOptionsMenu(menu);
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
     private void loadFragment(FragmentChanges fragment, boolean checkLoggedIn) {
         currentFragment = fragment;
 
-        if (checkLoggedIn && !CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (checkLoggedIn && !CanteenManagerApplication.getInstance().isAuthenticated()) {
             Log.e(TAG, "not logged in -> log in ");
             startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
         }

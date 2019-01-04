@@ -24,26 +24,6 @@ public class WaitingFragment extends FragmentChanges {
         // Required empty public constructor
     }
 
-    public static WaitingFragment newInstance(String param1, String param2) {
-        WaitingFragment fragment = new WaitingFragment();
-
-        // TODO: implement ...
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,12 +56,12 @@ public class WaitingFragment extends FragmentChanges {
 
         skbWaitingTime.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        loadCanteenData();
+        displayCanteenData();
 
         return view;
     }
 
-    private void loadCanteenData() {
+    private void displayCanteenData() {
         model = ViewModelProviders.of(getActivity()).get(CanteenManagerViewModel.class);
         model.getCanteen().observe(this, canteen -> {
             skbWaitingTime.setProgress(canteen.getAverageWaitingTime());
