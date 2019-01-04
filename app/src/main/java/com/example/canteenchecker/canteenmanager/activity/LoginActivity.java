@@ -88,4 +88,3 @@ public class LoginActivity extends AppCompatActivity {
         btnLogIn.setEnabled(enabled);
     }
 }
-

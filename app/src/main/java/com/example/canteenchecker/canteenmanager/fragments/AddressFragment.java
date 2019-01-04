@@ -33,7 +33,6 @@ public class AddressFragment extends FragmentChanges {
     private static final String TAG = AddressFragment.class.getName();
 
     private static final int DEFAULT_MAP_ZOOM_FACTOR = 15;
-    private static final int LOGIN_FOR_ADDRESS_FRAGMENT = 120;
 
     private CanteenManagerViewModel model;
 
@@ -49,11 +48,9 @@ public class AddressFragment extends FragmentChanges {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static AddressFragment newInstance(String param1, String param2) {
         AddressFragment fragment = new AddressFragment();
 
-        // TODO: save parameter
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         //args.putString(ARG_PARAM2, param2);
@@ -109,11 +106,6 @@ public class AddressFragment extends FragmentChanges {
         model.getCanteen().getValue().setName(edtName.getText().toString());
     }
 
-    @Override
-    public void updateView() {
-        // do nothing
-    }
-
     private void showAddressInMap() {
         updateMap(edtAddress.getText().toString());
     }
@@ -121,8 +113,6 @@ public class AddressFragment extends FragmentChanges {
     @SuppressLint("StaticFieldLeak")
     private void getAddressFromMap() {
         Log.i(TAG, "marker m    lat: " + m.getPosition().latitude + " lng: " + m.getPosition().longitude);
-
-        /* */
 
         new AsyncTask<LatLng, Void, String>() {
             @Override

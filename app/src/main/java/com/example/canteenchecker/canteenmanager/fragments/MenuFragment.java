@@ -15,7 +15,6 @@ import java.text.NumberFormat;
 
 public class MenuFragment extends FragmentChanges {
     private static final String TAG = MenuFragment.class.getName();
-    private static final int LOGIN_FOR_MENU_FRAGMENT = 124;
 
     private CanteenManagerViewModel model;
 
@@ -50,9 +49,7 @@ public class MenuFragment extends FragmentChanges {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Log.i(TAG, "MenuFragment onCreate");
-
     }
 
     @Override
@@ -68,7 +65,6 @@ public class MenuFragment extends FragmentChanges {
 
         displayCanteenData();
 
-        // Inflate the layout for this fragment
         return view;
     }
 
@@ -84,10 +80,5 @@ public class MenuFragment extends FragmentChanges {
     public void saveChanges() {
         model.getCanteen().getValue().setMeal(edtMenuName.getText().toString());
         model.getCanteen().getValue().setMealPrice(Float.parseFloat(edtMenuPrice.getText().toString()));
-    }
-
-    @Override
-    public void updateView() {
-        // do nothing
     }
 }

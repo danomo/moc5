@@ -1,8 +1,6 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +9,11 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
-import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
 
 public class WaitingFragment extends FragmentChanges {
     public static final String TAG = WaitingFragment.class.getName();
-    private static final int LOGIN_FOR_WAITING_FRAGMENT = 126;
 
     private SeekBar skbWaitingTime;
     private TextView txvWaitingTime;
@@ -28,7 +23,6 @@ public class WaitingFragment extends FragmentChanges {
     public WaitingFragment() {
         // Required empty public constructor
     }
-
 
     public static WaitingFragment newInstance(String param1, String param2) {
         WaitingFragment fragment = new WaitingFragment();
@@ -82,13 +76,8 @@ public class WaitingFragment extends FragmentChanges {
 
         skbWaitingTime.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
-            startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_WAITING_FRAGMENT);
-        } else {
-            loadCanteenData();
-        }
-        // Inflate the layout for this fragment
+        loadCanteenData();
+
         return view;
     }
 
@@ -102,10 +91,5 @@ public class WaitingFragment extends FragmentChanges {
     @Override
     public void saveChanges() {
         model.getCanteen().getValue().setAverageWaitingTime(skbWaitingTime.getProgress());
-    }
-
-    @Override
-    public void updateView() {
-        // do nothing
     }
 }

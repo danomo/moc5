@@ -1,9 +1,6 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,11 +43,6 @@ public class HomeFragment extends FragmentChanges {
 
     @Override
     public void saveChanges() {
-        // do nothing
-    }
-
-    @Override
-    public void updateView() {
         // do nothing
     }
 }

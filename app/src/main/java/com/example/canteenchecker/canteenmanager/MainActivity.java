@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getName();
 
-    private static final int LOGIN_FOR_CANTEEN_MANAGER = 127;
+    private static final int LOGIN_FOR_CANTEEN_MANAGER = 23;
 
     final FragmentChanges fragmentAddress = new AddressFragment();
     final FragmentChanges fragmentContact = new ContactFragment();
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     final FragmentChanges fragmentMenu = new MenuFragment();
     final FragmentChanges fragmentRating = new RatingFragment();
     final FragmentChanges fragmentWaiting = new WaitingFragment();
+
     FragmentChanges currentFragment;
 
     private CanteenManagerViewModel canteenModel;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "Firebase  broadcastReceiver  new Message received.");
+            Log.i(TAG, "Firebase  broadcastReceiver  new Message received.");
             //  Toast.makeText(getApplication(), "neues Rating!", Toast.LENGTH_SHORT);
 
             getCanteen();
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         canteenModel = ViewModelProviders.of(this).get(CanteenManagerViewModel.class);
 
         if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.e(TAG, "not logged in -> log in ");
+            Log.i(TAG, "not logged in -> log in ");
             startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
         } else {
             getCanteen();
@@ -103,11 +104,11 @@ public class MainActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e(TAG, "MainActivity.onActivityResult   logged in -start getCanteen() ");
-        Log.e(TAG, "MainActivity.onActivityResult  requestCode:  " + requestCode + "  resultCode  " + resultCode);
+        Log.i(TAG, "MainActivity.onActivityResult   logged in -start getCanteen() ");
+        Log.i(TAG, "MainActivity.onActivityResult  requestCode:  " + requestCode + "  resultCode  " + resultCode);
 
         if (requestCode == LOGIN_FOR_CANTEEN_MANAGER && resultCode == Activity.RESULT_OK) {
-            Log.e(TAG, "  now i am logged in -> getCanteen");
+            Log.i(TAG, "  now i am logged in -> getCanteen");
             getCanteen();
         }
     }
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "logout success", Toast.LENGTH_SHORT).show();
                 CanteenManagerApplication1.getInstance().setAuthenticationToken(null);
                 txvNavSubTitle.setText(null);
-                txvNavTitle.setText("Kein Benutzer angemeldet");
+                txvNavTitle.setText(getString(R.string.NoUserLoggedIn));
                 loadFragment(fragmentHome, false);
                 break;
             default:
@@ -167,17 +168,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        currentFragment.saveChanges();
-        updateCanteen();
-
+        if (item.getItemId() == R.id.mniSaveChanges) {
+            currentFragment.saveChanges();
+            updateCanteen();
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // TODO: set SAVE visible if changes were made to a field in a fragment
-        // menu.findItem((R.id.mniCall)).setVisible(canteen != null && canteen.getPhoneNumber() != null && !canteen.getPhoneNumber().isEmpty());
-        // menu.findItem((R.id.mniShowWebSite)).setVisible(canteen != null && canteen.getWebsite() != null && !canteen.getWebsite().isEmpty());
+        menu.findItem((R.id.mniSaveChanges)).setVisible(
+                CanteenManagerApplication1.getInstance().isAuthenticated() &&
+                        ((currentFragment != fragmentRating) || (currentFragment != fragmentHome)));
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -200,14 +202,14 @@ public class MainActivity extends AppCompatActivity
             protected void onPostExecute(Canteen c) {
                 if (c == null) {
                     Log.e(TAG, "could not connect to server, returned canteen is null.");
-                    Toast.makeText(getApplicationContext(), "FEHLER: Konnte Kantine nicht vom Server laden.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "FEHLER: Konnte Kantine nicht vom Server laden.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 canteenModel.setCanteen(c);
                 txvNavSubTitle.setText(c.getAddress());
                 txvNavTitle.setText(c.getName());
                 Log.e(TAG, "got a canteen: " + c.getCanteenId() + " " + c.getName());
-                Toast.makeText(getApplicationContext(), "Kantine erfolgreich geladen.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Kantine erfolgreich geladen.", Toast.LENGTH_LONG).show();
             }
         }.execute();
     }
@@ -232,11 +234,11 @@ public class MainActivity extends AppCompatActivity
             protected void onPostExecute(Boolean res) {
                 if (!res) {
                     Log.e(TAG, "could not connect to server, could not update canteen.");
-                    Toast.makeText(getApplicationContext(), "Kantine konnte nicht upgedated werden.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Kantine konnte nicht upgedated werden.", Toast.LENGTH_LONG).show();
                     return;
                 }
                 Log.i(TAG, "got a canteen: " + c.getCanteenId() + " " + c.getName());
-                Toast.makeText(getApplicationContext(), "Kantine erfolgreich upgedated.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Kantine erfolgreich upgedated.", Toast.LENGTH_LONG).show();
             }
 
         }.execute(c);
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity
     private void loadFragment(FragmentChanges fragment, boolean checkLoggedIn) {
         currentFragment = fragment;
 
-        if (checkLoggedIn  &&  !CanteenManagerApplication1.getInstance().isAuthenticated()) {
+        if (checkLoggedIn && !CanteenManagerApplication1.getInstance().isAuthenticated()) {
             Log.e(TAG, "not logged in -> log in ");
             startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
         }
@@ -260,5 +262,7 @@ public class MainActivity extends AppCompatActivity
         ft.replace(R.id.replace_fragments, currentFragment);
         ft.addToBackStack(null);
         ft.commit();
+
+        invalidateOptionsMenu();
     }
 }

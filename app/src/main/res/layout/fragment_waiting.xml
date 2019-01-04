@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txvWaitingTimeIgnore"
-        android:text="@string/txvWaitingTime"/>
+        android:text="@string/txvWaitingTime"
+        android:textSize="@dimen/txtRatings"/>
 
     <TextView
         android:layout_width="match_parent"

@@ -39,24 +39,22 @@ import java.util.stream.Collectors;
 
 public class RatingFragment extends FragmentChanges {
     private static final String TAG = RatingFragment.class.getName();
-    private static final int LOGIN_FOR_RATING_FRAGMENT = 125;
 
     private final CanteenRatingAdapter ratingAdapter = new CanteenRatingAdapter();
     private CanteenManagerViewModel model;
+
     private TextView txtCountRatings;
     private TextView txtAvgRating;
+    private RecyclerView rcvRatings;
+
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "Firebase  broadcastReceiver  new Message received.");
+            Log.i(TAG, "Firebase  broadcastReceiver  new Message received.");
             //  Toast.makeText(getApplication(), "neues Rating!", Toast.LENGTH_SHORT);
-
             displayCanteenData();
         }
     };
-    //  private SwipeRefreshLayout srlRatings;
-    private RecyclerView rcvRatings;
-
 
     public RatingFragment() {
         // Required empty public constructor
@@ -89,20 +87,11 @@ public class RatingFragment extends FragmentChanges {
 
         txtCountRatings = view.findViewById(R.id.txtCountRatings);
         txtAvgRating = view.findViewById(R.id.txtAvgRating);
-        // srlRatings = view.findViewById(R.id.srlRatings);
         rcvRatings = view.findViewById(R.id.rcvRatings);
 
         rcvRatings.setLayoutManager(new LinearLayoutManager(getActivity()));
         rcvRatings.setAdapter(ratingAdapter);
         rcvRatings.setItemAnimator(new DefaultItemAnimator());
-
-        //  srlRatings.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-        //    @Override
-        //      public void onRefresh() {
-        //  displayCanteenData();
-        //      }
-        //  });
-
 
         displayCanteenData();
 
@@ -129,22 +118,13 @@ public class RatingFragment extends FragmentChanges {
                 txtCountRatings.setText(String.valueOf(canteen.getRatings().size()));
                 txtAvgRating.setText(String.format("%f", canteen.getAverageRating()));
 
-                // srlRatings.setRefreshing(true);
-
                 canteen.getRatings().stream().forEach(r -> {
-                    Log.i(TAG, "cantee rating   " + r.getRatingId() + " " + r.getRemark() + " " + r.getUsername());
+                    Log.i(TAG, "canteen rating   " + r.getRatingId() + "   |   " + r.getRemark() + "  |   " + r.getUsername());
                 });
 
                 ratingAdapter.displayRatings(canteen.getRatings());
-                // srlRatings.setRefreshing(false);
             }
         });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void updateView() {
-        loadCanteenData();
     }
 
     @Override
@@ -154,8 +134,6 @@ public class RatingFragment extends FragmentChanges {
 
     @SuppressLint("StaticFieldLeak")
     private void displayCanteenData() {
-        // srlRatings.setRefreshing(true);
-
         new AsyncTask<Void, Void, Canteen>() {
             @Override
             protected Canteen doInBackground(Void... voids) {
@@ -173,13 +151,12 @@ public class RatingFragment extends FragmentChanges {
                     Log.e(TAG, "got NO canteen   ");
                     return;
                 }
-                Log.e(TAG, "ratings   size " + c.getRatings().size());
+                Log.i(TAG, "ratings   size " + c.getRatings().size());
                 c.getRatings().stream().forEach(r -> {
-                    Log.e(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
+                    Log.i(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
                 });
 
                 Collection<CanteenRating> ratings = c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? 1 : -1)).collect(Collectors.toList());
-                // srlRatings.setRefreshing(false);
                 ratingAdapter.displayRatings(ratings);
                 txtCountRatings.setText(String.valueOf(c.getRatings().size()));
                 txtAvgRating.setText(String.format("%4.1f", c.getAverageRating()));

@@ -10,9 +10,7 @@ import android.widget.TextView;
 import com.example.canteenchecker.canteenmanager.R;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
 
-
 public class ContactFragment extends FragmentChanges {
-    private static final int LOGIN_FOR_CONTACT_FRAGMENT = 121;
     private static final String TAG = ContactFragment.class.getName();
 
     private TextView edtWebsite;
@@ -68,10 +66,5 @@ public class ContactFragment extends FragmentChanges {
     public void saveChanges() {
         model.getCanteen().getValue().setWebsite(edtWebsite.getText().toString());
         model.getCanteen().getValue().setPhone(edtPhone.getText().toString());
-    }
-
-    @Override
-    public void updateView() {
-        // do nothing
     }
 }

@@ -30,17 +30,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        Log.e(TAG, "Firebase Manger  new Message received.   remoteMessage 111  " + remoteMessage.getData().get(REMOTE_MESSAGE_TYPE_KEY));
-        Log.e(TAG, "Firebase Manger  new Message received.   remoteMessage.getMessageType  " + remoteMessage.getMessageType());
+        Log.i(TAG, "Firebase Manger  new Message received.   remoteMessage 111  " + remoteMessage.getData().get(REMOTE_MESSAGE_TYPE_KEY));
+        Log.i(TAG, "Firebase Manger  new Message received.   remoteMessage.getMessageType  " + remoteMessage.getMessageType());
 
         Map<String, String> data = remoteMessage.getData();
         data.forEach((k, v) -> {
-            Log.e(TAG, "Firebase   data         k = " + k + " + value = " + v);
+            Log.i(TAG, "Firebase   data         k = " + k + " + value = " + v);
         });
 
         if (REMOTE_MESSAGE_TYPE_VALUE.equals(data.get(REMOTE_MESSAGE_TYPE_KEY))) {
             Intent intent = new Intent(RATINGS_CHANGED_INTENT_ACTION);
-            Log.e(TAG, "Firebase Manger  sending Intent ");
+            Log.i(TAG, "Firebase Manger  sending Intent ");
 
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }

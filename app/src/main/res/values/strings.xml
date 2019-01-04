@@ -42,4 +42,5 @@
     <string name="btnDeleteRating">Löschen</string>
     <string name="btnHomeLogin_hint">Anmelden</string>
     <string name="edtHomeTxt">Sie sind nicht angemeldet.</string>
+    <string name="NoUserLoggedIn">Kein Benutzer angemeldet</string>
 </resources>
