@@ -18,7 +18,7 @@ import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewMod
 
 public class WaitingFragment extends FragmentChanges {
     public static final String TAG = WaitingFragment.class.getName();
-    private static final int LOGIN_FOR_WAITING_FRAGMENT = 127;
+    private static final int LOGIN_FOR_WAITING_FRAGMENT = 126;
 
     private SeekBar skbWaitingTime;
     private TextView txvWaitingTime;
@@ -97,15 +97,6 @@ public class WaitingFragment extends FragmentChanges {
         model.getCanteen().observe(this, canteen -> {
             skbWaitingTime.setProgress(canteen.getAverageWaitingTime());
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_WAITING_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            loadCanteenData();
-        }
     }
 
     @Override

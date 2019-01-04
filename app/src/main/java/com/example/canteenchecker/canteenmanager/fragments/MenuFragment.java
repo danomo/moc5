@@ -1,8 +1,6 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,16 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
-import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
+
+import java.text.NumberFormat;
 
 public class MenuFragment extends FragmentChanges {
     private static final String TAG = MenuFragment.class.getName();
-    private static final int LOGIN_FOR_MENU_FRAGMENT = 126;
+    private static final int LOGIN_FOR_MENU_FRAGMENT = 124;
 
     private CanteenManagerViewModel model;
 
@@ -70,27 +66,13 @@ public class MenuFragment extends FragmentChanges {
         edtMenuName = view.findViewById(R.id.edtMenuName);
         edtMenuPrice = view.findViewById(R.id.edtMenuPrice);
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
-            startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_MENU_FRAGMENT);
-        } else {
-            loadCanteenData();
-        }
+        displayCanteenData();
 
         // Inflate the layout for this fragment
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_MENU_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            loadCanteenData();
-        }
-    }
-
-    private void loadCanteenData() {
+    private void displayCanteenData() {
         model = ViewModelProviders.of(getActivity()).get(CanteenManagerViewModel.class);
         model.getCanteen().observe(this, canteen -> {
             edtMenuName.setText(canteen.getMeal());

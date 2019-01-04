@@ -1,7 +1,6 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,9 +22,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
-import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.domainobjects.Canteen;
 import com.example.canteenchecker.canteenmanager.domainobjects.CanteenRating;
 import com.example.canteenchecker.canteenmanager.proxy.ServiceProxyManager;
@@ -38,10 +35,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RatingFragment extends FragmentChanges {
     private static final String TAG = RatingFragment.class.getName();
-    private static final int LOGIN_FOR_RATING_FRAGMENT = 126;
+    private static final int LOGIN_FOR_RATING_FRAGMENT = 125;
 
     private final CanteenRatingAdapter ratingAdapter = new CanteenRatingAdapter();
     private CanteenManagerViewModel model;
@@ -53,7 +51,7 @@ public class RatingFragment extends FragmentChanges {
             Log.e(TAG, "Firebase  broadcastReceiver  new Message received.");
             //  Toast.makeText(getApplication(), "neues Rating!", Toast.LENGTH_SHORT);
 
-            updateRatings();
+            displayCanteenData();
         }
     };
     //  private SwipeRefreshLayout srlRatings;
@@ -101,16 +99,12 @@ public class RatingFragment extends FragmentChanges {
         //  srlRatings.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
         //    @Override
         //      public void onRefresh() {
-        //  updateRatings();
+        //  displayCanteenData();
         //      }
         //  });
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
-            startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_RATING_FRAGMENT);
-        } else {
-            updateRatings();
-        }
+
+        displayCanteenData();
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(broadcastReceiver, MyFirebaseMessagingService.updatedRatingsMessage());
         return view;
@@ -120,16 +114,6 @@ public class RatingFragment extends FragmentChanges {
     public void onDestroyView() {
         super.onDestroyView();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastReceiver);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_RATING_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            loadCanteenData();
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -169,7 +153,7 @@ public class RatingFragment extends FragmentChanges {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private void updateRatings() {
+    private void displayCanteenData() {
         // srlRatings.setRefreshing(true);
 
         new AsyncTask<Void, Void, Canteen>() {
@@ -194,11 +178,11 @@ public class RatingFragment extends FragmentChanges {
                     Log.e(TAG, "rating id " + r.getRatingId() + " " + r.getUsername() + " " + r.getRemark());
                 });
 
-                c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? -1 : 1));
+                Collection<CanteenRating> ratings = c.getRatings().stream().sorted((a, b) -> (a.getTimestamp() < b.getTimestamp() ? 1 : -1)).collect(Collectors.toList());
                 // srlRatings.setRefreshing(false);
-                ratingAdapter.displayRatings(c.getRatings());
+                ratingAdapter.displayRatings(ratings);
                 txtCountRatings.setText(String.valueOf(c.getRatings().size()));
-                txtAvgRating.setText(String.format("'%8.1f'", c.getAverageRating()));
+                txtAvgRating.setText(String.format("%4.1f", c.getAverageRating()));
             }
         }.execute();
     }
@@ -223,7 +207,7 @@ public class RatingFragment extends FragmentChanges {
             holder.rtbRating.setRating(c.getRatingPoints());
 
             Date date = new Date(c.getTimestamp());
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy, hh:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy, HH:mm");
             String format = formatter.format(date);
             holder.txvCreated.setText(format);
 

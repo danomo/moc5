@@ -1,5 +1,6 @@
 package com.example.canteenchecker.canteenmanager.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void logIn() {
         Log.i(TAG, String.format("grg: starting  logIn"));
 

@@ -15,23 +15,12 @@ import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 public class HomeFragment extends FragmentChanges {
     private static final String TAG = HomeFragment.class.getName();
 
-    private static final int LOGIN_FOR_HOME_FRAGMENT = 124;
+    private static final int LOGIN_FOR_HOME_FRAGMENT = 123;
 
     private Button btnHomeLogin;
 
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-
-        // TODO: save parameter
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -53,15 +42,6 @@ public class HomeFragment extends FragmentChanges {
         btnHomeLogin.setOnClickListener(v -> startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_HOME_FRAGMENT));
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_HOME_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            Log.i(TAG, "login successful");
-        }
     }
 
     @Override

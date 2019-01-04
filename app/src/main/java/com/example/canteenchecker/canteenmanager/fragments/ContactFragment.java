@@ -1,23 +1,18 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
-import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
 
 
 public class ContactFragment extends FragmentChanges {
-    private static final int LOGIN_FOR_CONTACT_FRAGMENT = 125;
+    private static final int LOGIN_FOR_CONTACT_FRAGMENT = 121;
     private static final String TAG = ContactFragment.class.getName();
 
     private TextView edtWebsite;
@@ -56,26 +51,12 @@ public class ContactFragment extends FragmentChanges {
         edtWebsite = view.findViewById(R.id.edtWebsite);
         edtPhone = view.findViewById(R.id.edtPhone);
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
-            startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_CONTACT_FRAGMENT);
-        } else {
-            loadCanteenData();
-        }
+        displayCanteenData();
 
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_CONTACT_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            loadCanteenData();
-        }
-    }
-
-    private void loadCanteenData() {
+    private void displayCanteenData() {
         model = ViewModelProviders.of(getActivity()).get(CanteenManagerViewModel.class);
         model.getCanteen().observe(this, canteen -> {
             edtWebsite.setText(canteen.getWebsite());

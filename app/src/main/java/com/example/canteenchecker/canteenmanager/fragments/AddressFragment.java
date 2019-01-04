@@ -1,9 +1,7 @@
 package com.example.canteenchecker.canteenmanager.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -18,9 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.canteenchecker.canteenmanager.CanteenManagerApplication1;
 import com.example.canteenchecker.canteenmanager.R;
-import com.example.canteenchecker.canteenmanager.activity.LoginActivity;
 import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +33,7 @@ public class AddressFragment extends FragmentChanges {
     private static final String TAG = AddressFragment.class.getName();
 
     private static final int DEFAULT_MAP_ZOOM_FACTOR = 15;
-    private static final int LOGIN_FOR_ADDRESS_FRAGMENT = 124;
+    private static final int LOGIN_FOR_ADDRESS_FRAGMENT = 120;
 
     private CanteenManagerViewModel model;
 
@@ -85,12 +81,7 @@ public class AddressFragment extends FragmentChanges {
         btnShowInMap = view.findViewById(R.id.btnShowInMap);
         btnTakeFromMap = view.findViewById(R.id.btnTakeFromMap);
 
-        if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
-            startActivityForResult(LoginActivity.createIntent(getActivity()), LOGIN_FOR_ADDRESS_FRAGMENT);
-        } else {
-            loadCanteenData();
-        }
+        displayCanteenData();
 
         FragmentManager fm = getChildFragmentManager();
         mpfMap = (SupportMapFragment) fm.findFragmentById(R.id.mpfMap);
@@ -103,22 +94,13 @@ public class AddressFragment extends FragmentChanges {
         return view;
     }
 
-    private void loadCanteenData() {
+    private void displayCanteenData() {
         model = ViewModelProviders.of(getActivity()).get(CanteenManagerViewModel.class);
         model.getCanteen().observe(this, canteen -> {
             edtAddress.setText(canteen.getAddress());
             edtName.setText(canteen.getName());
             updateMap(canteen.getAddress());
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LOGIN_FOR_ADDRESS_FRAGMENT && resultCode == Activity.RESULT_OK) {
-            loadCanteenData();
-        }
     }
 
     @Override
@@ -154,11 +136,6 @@ public class AddressFragment extends FragmentChanges {
 
                     if (addresses != null) {
                         address = addresses.get(0).getAddressLine(0);
-                        String city = addresses.get(0).getLocality();
-                        String state = addresses.get(0).getAdminArea();
-                        String country = addresses.get(0).getCountryName();
-                        String postalCode = addresses.get(0).getPostalCode();
-                        String knownName = addresses.get(0).getFeatureName();
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "exception when calling  geocoder.getFromLocation   with lat = " + latLngs[0].latitude + "   lng = "
@@ -221,25 +198,21 @@ public class AddressFragment extends FragmentChanges {
 
     @NonNull
     private OnMapReadyCallback getOnMapReadyCallback() {
-        return new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                UiSettings uiSettings = googleMap.getUiSettings();
-                uiSettings.setAllGesturesEnabled(false);
-                uiSettings.setZoomControlsEnabled(true);
+        return googleMap -> {
+            UiSettings uiSettings = googleMap.getUiSettings();
+            uiSettings.setAllGesturesEnabled(true);
+            uiSettings.setZoomControlsEnabled(true);
 
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latLng);
-                        googleMap.clear();
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                        m = googleMap.addMarker(markerOptions);
-                    }
-                });
-
-            }
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    googleMap.clear();
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    m = googleMap.addMarker(markerOptions);
+                }
+            });
         };
     }
 }

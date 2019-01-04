@@ -38,12 +38,12 @@ import com.example.canteenchecker.canteenmanager.viewmodel.CanteenManagerViewMod
 
 import java.io.IOException;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     private static final String TAG = MainActivity.class.getName();
-    private static final int LOGIN_FOR_CANTEEN_MANAGER = 123;
+
+    private static final int LOGIN_FOR_CANTEEN_MANAGER = 127;
+
     final FragmentChanges fragmentAddress = new AddressFragment();
     final FragmentChanges fragmentContact = new ContactFragment();
     final FragmentChanges fragmentHome = new HomeFragment();
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         canteenModel = ViewModelProviders.of(this).get(CanteenManagerViewModel.class);
 
         if (!CanteenManagerApplication1.getInstance().isAuthenticated()) {
-            Log.i(TAG, "not logged in -> log in ");
+            Log.e(TAG, "not logged in -> log in ");
             startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
         } else {
             getCanteen();
@@ -103,7 +103,11 @@ public class MainActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.e(TAG, "MainActivity.onActivityResult   logged in -start getCanteen() ");
+        Log.e(TAG, "MainActivity.onActivityResult  requestCode:  " + requestCode + "  resultCode  " + resultCode);
+
         if (requestCode == LOGIN_FOR_CANTEEN_MANAGER && resultCode == Activity.RESULT_OK) {
+            Log.e(TAG, "  now i am logged in -> getCanteen");
             getCanteen();
         }
     }
@@ -125,29 +129,26 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_address:
-                loadFragment(fragmentAddress);
+                loadFragment(fragmentAddress, true);
                 break;
             case R.id.nav_contact:
-                loadFragment(fragmentContact);
+                loadFragment(fragmentContact, true);
                 break;
             case R.id.nav_menu:
-                loadFragment(fragmentMenu);
+                loadFragment(fragmentMenu, true);
                 break;
             case R.id.nav_ratings:
-                loadFragment(fragmentRating);
+                loadFragment(fragmentRating, true);
                 break;
             case R.id.nav_waitingperiod:
-                loadFragment(fragmentWaiting);
+                loadFragment(fragmentWaiting, true);
                 break;
-
-            //TODO: remove?
-
             case R.id.nav_logout:
                 Toast.makeText(this, "logout success", Toast.LENGTH_SHORT).show();
                 CanteenManagerApplication1.getInstance().setAuthenticationToken(null);
                 txvNavSubTitle.setText(null);
                 txvNavTitle.setText("Kein Benutzer angemeldet");
-                loadFragment(fragmentHome);
+                loadFragment(fragmentHome, false);
                 break;
             default:
                 Log.e(TAG, "switch ended in default - should not happen!");
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                 canteenModel.setCanteen(c);
                 txvNavSubTitle.setText(c.getAddress());
                 txvNavTitle.setText(c.getName());
-                Log.i(TAG, "got a canteen: " + c.getCanteenId() + " " + c.getName());
+                Log.e(TAG, "got a canteen: " + c.getCanteenId() + " " + c.getName());
                 Toast.makeText(getApplicationContext(), "Kantine erfolgreich geladen.", Toast.LENGTH_SHORT).show();
             }
         }.execute();
@@ -247,11 +248,17 @@ public class MainActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
-    private void loadFragment(FragmentChanges fragment) {
+    private void loadFragment(FragmentChanges fragment, boolean checkLoggedIn) {
+        currentFragment = fragment;
+
+        if (checkLoggedIn  &&  !CanteenManagerApplication1.getInstance().isAuthenticated()) {
+            Log.e(TAG, "not logged in -> log in ");
+            startActivityForResult(LoginActivity.createIntent(this), LOGIN_FOR_CANTEEN_MANAGER);
+        }
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.replace_fragments, fragment);
+        ft.replace(R.id.replace_fragments, currentFragment);
         ft.addToBackStack(null);
         ft.commit();
-        currentFragment = fragment;
     }
 }
